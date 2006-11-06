@@ -25,8 +25,6 @@
 package thinwire.apps.mail;
 
 import static thinwire.ui.ActionEventComponent.ACTION_CLICK;
-import static thinwire.ui.Component.PROPERTY_HEIGHT;
-import static thinwire.ui.Component.PROPERTY_WIDTH;
 import thinwire.ui.AlignX;
 import thinwire.ui.Dialog;
 import thinwire.ui.Label;
@@ -35,8 +33,7 @@ import thinwire.ui.TextArea;
 import thinwire.ui.TextField;
 import thinwire.ui.event.ActionEvent;
 import thinwire.ui.event.ActionListener;
-import thinwire.ui.event.PropertyChangeEvent;
-import thinwire.ui.event.PropertyChangeListener;
+import thinwire.ui.layout.TableUnitModel;
 
 /**
  * The ComposeDialog contains a Dialog set up for composing a new email. It has
@@ -47,7 +44,6 @@ import thinwire.ui.event.PropertyChangeListener;
  * @author Ted C. Howard
  */
 public class ComposeDialog extends Object {
-    private static final int TEXT_BORDER_SPACE = 65;
     private Dialog dialog;
     private ToolBar toolBar;
     private TextField toField;
@@ -55,32 +51,21 @@ public class ComposeDialog extends Object {
     private TextField subjectField;
     private TextArea msgBodyArea;
 
-    private PropertyChangeListener sizeListener = new PropertyChangeListener() {
-        public void propertyChange(PropertyChangeEvent ev) {
-            int size = ((Integer) ev.getNewValue()) - (MailClient.BORDER_SIZE * 2);
-            if (ev.getPropertyName().equals(PROPERTY_WIDTH)) {
-                int newSize = size - TEXT_BORDER_SPACE;
-                toolBar.setWidth(size);
-                toField.setWidth(newSize);
-                ccField.setWidth(newSize);
-                subjectField.setWidth(newSize);
-                msgBodyArea.setWidth(size - 10);
-            } else {
-                msgBodyArea.setHeight(msgBodyArea.getHeight() + (((Integer) ev.getNewValue()) - ((Integer) ev.getOldValue())));
-            }
-        }
-    };
-
     ComposeDialog() {
         dialog = new Dialog();
         dialog.setResizeAllowed(true);
         dialog.setBounds(50, 50, 640, 480);
         dialog.setTitle("New Message");
+        
+        TableUnitModel tum = new TableUnitModel();
+        tum.setWidths(56, 0);
+        tum.setHeights(30, 20, 20, 20, 0);
+        tum.setRowSpace(2);
+        tum.setColumnSpace(2);
+        dialog.setUnitModel(tum);
+        
         toolBar = new ToolBar();
-        toolBar.setX(0);
-        toolBar.setY(0);
-        toolBar.setWidth(634);
-        toolBar.setHeight(30);
+        toolBar.setBounds(0, 0, 2, 1);
         toolBar.addButton("Send", MailClient.IMG_PATH + "EnvelopeHS.gif");
         toolBar.getButton("Send").addActionListener(ACTION_CLICK, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -95,40 +80,39 @@ public class ComposeDialog extends Object {
         });
         dialog.getChildren().add(toolBar);
         toField = new TextField();
-        toField.setBounds(55, 40, 569, 20);
+        toField.setBounds(1, 1, 1, 1);
         dialog.getChildren().add(toField);
 
         Label toFieldLbl = new Label();
         toFieldLbl.setText("To:");
         toFieldLbl.setAlignX(AlignX.RIGHT);
-        toFieldLbl.setBounds(20, 40, 30, 20);
+        toFieldLbl.setBounds(0, 1, 1, 1);
         toFieldLbl.setLabelFor(toField);
         dialog.getChildren().add(toFieldLbl);
 
         ccField = new TextField();
-        ccField.setBounds(55, 65, 569, 20);
+        ccField.setBounds(1, 2, 1, 1);
         dialog.getChildren().add(ccField);
         Label ccFieldLbl = new Label();
         ccFieldLbl.setText("Cc:");
         ccFieldLbl.setAlignX(AlignX.RIGHT);
-        ccFieldLbl.setBounds(20, 65, 30, 20);
+        ccFieldLbl.setBounds(0, 2, 1, 1);
         ccFieldLbl.setLabelFor(ccField);
         dialog.getChildren().add(ccFieldLbl);
 
         subjectField = new TextField("Hey! You can resize this Dialog!");
-        subjectField.setBounds(55, 90, 569, 20);
+        subjectField.setBounds(1, 3, 1, 1);
         dialog.getChildren().add(subjectField);
         Label subjectFieldLbl = new Label();
         subjectFieldLbl.setText("Subject:");
         subjectFieldLbl.setAlignX(AlignX.RIGHT);
-        subjectFieldLbl.setBounds(0, 90, 50, 20);
+        subjectFieldLbl.setBounds(0, 3, 1, 1);
         subjectFieldLbl.setLabelFor(subjectField);
         dialog.getChildren().add(subjectFieldLbl);
 
         msgBodyArea = new TextArea();
-        msgBodyArea.setBounds(MailClient.BORDER_SIZE, 115, 624, dialog.getInnerHeight() - 115 - 5);
+        msgBodyArea.setBounds(0, 4, 2, 1);
         dialog.getChildren().add(msgBodyArea);
-        dialog.addPropertyChangeListener(new String[] { PROPERTY_WIDTH, PROPERTY_HEIGHT }, sizeListener);
     }
 
     public Dialog getDialog() {
