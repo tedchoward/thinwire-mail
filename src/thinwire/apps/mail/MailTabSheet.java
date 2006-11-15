@@ -87,7 +87,7 @@ public class MailTabSheet extends TabSheet {
             h.setText("Click Here to Open the Message in a New Window");
             h.setWidth(225);
             h.setHeight(20);
-            h.setLocation(mv.getMessageLocation());
+            h.setLocation(mv.getLocation());
             MessageBox.confirm(null, "Print the Email", h, "Done");
         }
     };

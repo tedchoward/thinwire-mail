@@ -24,70 +24,23 @@
  */
 package thinwire.apps.mail;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
-import thinwire.ui.Panel;
 import thinwire.ui.WebBrowser;
-import thinwire.ui.event.PropertyChangeEvent;
-import thinwire.ui.event.PropertyChangeListener;
 import thinwire.ui.style.Color;
 
 /**
- * The MessageViewer is a Panel that contains a WebBrowser component for viewing
+ * The MessageViewer is a WebBrowser component for viewing
  * the contents of the message. By using the WebBrowser component, we are
  * automatically able to support rich text html messages.
  * 
  * @author Ted C. Howard
  */
-public class MessageViewer extends Panel {
-    private WebBrowser messageBrowser;
-
-    private PropertyChangeListener sizeListener = new PropertyChangeListener() {
-        public void propertyChange(PropertyChangeEvent ev) {
-            //int size = ((Integer) ev.getNewValue()) - (MailClient.BORDER_SIZE);
-            if (ev.getPropertyName().equals(PROPERTY_WIDTH)) {
-                int size = ((Panel) ev.getSource()).getInnerWidth();
-                messageBrowser.setWidth(size);
-            } else {
-                int size = ((Panel) ev.getSource()).getInnerHeight() - MailClient.BORDER_SIZE * 2;
-                messageBrowser.setHeight(size);
-            }
-        }
-    };
+class MessageViewer extends WebBrowser {
 
     MessageViewer() {
-        messageBrowser = new WebBrowser();
-        messageBrowser.getStyle().getBackground().setColor(Color.WHITE);
-        getChildren().add(messageBrowser);
-        addPropertyChangeListener(new String[] { PROPERTY_WIDTH, PROPERTY_HEIGHT }, sizeListener);
+        getStyle().getBackground().setColor(Color.WHITE);
     }
 
-    /**
-     * The contents of the message are written out to a temporary file on the
-     * server and then the location of the WebBrowser control is set to the path
-     * of the temporary file.
-     * 
-     * @param msg
-     * @throws Exception
-     */
-    public void setMessage(String msg) throws Exception {
-        String currentFile = messageBrowser.getLocation();
-        if (currentFile.length() > 0) new File(currentFile).delete();
-        File tmpFile = File.createTempFile("mailMsg" + System.currentTimeMillis(), ".html");
-        tmpFile.deleteOnExit();
-        FileOutputStream fos = new FileOutputStream(tmpFile);
-        fos.write(msg.getBytes());
-        fos.flush();
-        fos.close();
-        messageBrowser.setLocation(tmpFile.getAbsolutePath());
-    }
-
-    public String getMessageLocation() {
-        return messageBrowser.getLocation();
-    }
-
-    public void clear() {
-        messageBrowser.setLocation("about:blank");
+    void clear() {
+        setLocation("about:blank");
     }
 }

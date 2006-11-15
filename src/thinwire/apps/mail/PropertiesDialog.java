@@ -41,6 +41,7 @@ import thinwire.ui.event.ActionEvent;
 import thinwire.ui.event.ActionListener;
 import thinwire.ui.event.PropertyChangeEvent;
 import thinwire.ui.event.PropertyChangeListener;
+import thinwire.ui.layout.TableUnitModel;
 
 /**
  * The PropertiesDialog contains a Dialog for getting the POP3 account settings
@@ -52,7 +53,7 @@ import thinwire.ui.event.PropertyChangeListener;
  * 
  * @author Ted C. Howard
  */
-public class PropertiesDialog {
+class PropertiesDialog {
     private Dialog dialog;
     private TextField userName;
     private TextField password;
@@ -65,159 +66,151 @@ public class PropertiesDialog {
     private CheckBox useDefault;
     private int returnValue;
 
-    private ActionListener okClickListener = new ActionListener() {
-        public void actionPerformed(ActionEvent ev) {
-            if (useDefault.isChecked()) {
-                properties.setProperty("useDefault", "YES");
-                try {
-                    File file = Application.current().getRelativeFile("thinwire_mail.properties");
-                    if (!file.exists()) file.createNewFile();
-                    properties.load(new FileInputStream(file));
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                properties.setProperty("useDefault", "");
-                if (useSSL.isChecked()) {
-                    properties.setProperty("connectionType", "pop3+ssl");
-                } else {
-                    properties.setProperty("connectionType", "pop3");
-                }
-                properties.setProperty("username", userName.getText());
-                properties.setProperty("password", password.getText());
-                properties.setProperty("server", server.getText());
-                properties.setProperty("emailAddress", emailAddress.getText());
-            }
-            returnValue = 1;
-            dialog.setVisible(false);
-        }
-    };
-    
-    private ActionListener cancelClickListener = new ActionListener() {
-        public void actionPerformed(ActionEvent ev) {
-            returnValue = 0;
-            properties.setProperty("useDefault", "YES");
-            dialog.setVisible(false);
-        }
-    };
-
     PropertiesDialog(Properties properties) {
         this.properties = properties;
         dialog = new Dialog();
         dialog.setBounds(10, 10, 425, 200);
         dialog.setTitle("Account Settings");
         
+        TableUnitModel tum = new TableUnitModel();
+        tum.setWidths(115, 0, 60, 60, 5);
+        tum.setHeights(5, 20, 20, 20, 20, 20, 20, 5, 5);
+        tum.setRowSpace(5);
+        tum.setColumnSpace(5);
+        dialog.setUnitModel(tum);
+        
         useDefault = new CheckBox("Use Demo Account");
-        useDefault.setBounds(115, 10, 160, 20);
+        useDefault.setBounds(1, 1, 1, 1);
         useDefault.addPropertyChangeListener(CheckBox.PROPERTY_CHECKED, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
                 if ((Boolean) ev.getNewValue()) {
-                    userName.setVisible(false);
-                    userName.getLabel().setVisible(false);
-                    password.setVisible(false);
-                    password.getLabel().setVisible(false);
-                    server.setVisible(false);
-                    server.getLabel().setVisible(false);
-                    emailAddress.setVisible(false);
-                    emailAddress.getLabel().setVisible(false);
-                    useSSL.setVisible(false);
-                    okBtn.setY(15);
-                    cancelBtn.setY(15);
-                    dialog.setHeight(75);
+                    userName.setEnabled(false);
+                    password.setEnabled(false);
+                    server.setEnabled(false);
+                    emailAddress.setEnabled(false);
+                    useSSL.setEnabled(false);
                 } else {
-                    dialog.setHeight(200);
-                    okBtn.setY(140);
-                    cancelBtn.setY(140);
-                    userName.setVisible(true);
-                    userName.getLabel().setVisible(true);
-                    password.setVisible(true);
-                    password.getLabel().setVisible(true);
-                    server.setVisible(true);
-                    server.getLabel().setVisible(true);
-                    emailAddress.setVisible(true);
-                    emailAddress.getLabel().setVisible(true);
-                    useSSL.setVisible(true);
+                    userName.setEnabled(true);
+                    password.setEnabled(true);
+                    server.setEnabled(true);
+                    emailAddress.setEnabled(true);
+                    useSSL.setEnabled(true);
                 }
             }
         });
         dialog.getChildren().add(useDefault);
 
         userName = new TextField();
-        userName.setBounds(115, 35, 300, 20);
+        userName.setBounds(1, 2, 3, 1);
         userName.setText(properties.getProperty("username", ""));
         dialog.getChildren().add(userName);
+        
         Label userNameLbl = new Label();
         userNameLbl.setText("User Name:");
-        userNameLbl.setBounds(5, 35, 100, 20);
+        userNameLbl.setBounds(0, 2, 1, 1);
         userNameLbl.setAlignX(AlignX.RIGHT);
         userNameLbl.setLabelFor(userName);
         dialog.getChildren().add(userNameLbl);
 
         password = new TextField();
-        password.setBounds(115, 60, 300, 20);
+        password.setBounds(1, 3, 3, 1);
         password.setInputHidden(true);
         password.setText(properties.getProperty("password", ""));
         dialog.getChildren().add(password);
+        
         Label passwordLbl = new Label();
         passwordLbl.setText("Password:");
-        passwordLbl.setBounds(5, 60, 100, 20);
+        passwordLbl.setBounds(0, 3, 1, 1);
         passwordLbl.setAlignX(AlignX.RIGHT);
         passwordLbl.setLabelFor(password);
         dialog.getChildren().add(passwordLbl);
 
         server = new TextField();
-        server.setBounds(115, 85, 300, 20);
+        server.setBounds(1, 4, 3, 1);
         server.setText(properties.getProperty("server", ""));
         dialog.getChildren().add(server);
+        
         Label serverLbl = new Label();
         serverLbl.setText("Server:");
-        serverLbl.setBounds(5, 85, 100, 20);
+        serverLbl.setBounds(0, 4, 1, 1);
         serverLbl.setAlignX(AlignX.RIGHT);
         serverLbl.setLabelFor(server);
         dialog.getChildren().add(serverLbl);
 
         emailAddress = new TextField();
-        emailAddress.setBounds(115, 110, 300, 20);
+        emailAddress.setBounds(1, 5, 3, 1);
         emailAddress.setText(properties.getProperty("emailAddress", ""));
         dialog.getChildren().add(emailAddress);
         Label emailLbl = new Label();
         emailLbl.setText("Email Address:");
-        emailLbl.setBounds(5, 110, 100, 20);
+        
+        emailLbl.setBounds(0, 5, 1, 1);
         emailLbl.setAlignX(AlignX.RIGHT);
         emailLbl.setLabelFor(emailAddress);
         dialog.getChildren().add(emailLbl);
 
         useSSL = new CheckBox();
         useSSL.setText("SSL Connection");
-        useSSL.setBounds(115, 135, 120, 20);
+        useSSL.setBounds(1, 6, 1, 1);
         if (properties.getProperty("connectionType", "").equals("pop3+ssl")) useSSL.setChecked(true);
         dialog.getChildren().add(useSSL);
 
         okBtn = new Button("OK", MailClient.IMG_PATH + "ok.png");
-        okBtn.setBounds(290, 140, 60, 30);
-        okBtn.addActionListener(ACTION_CLICK, okClickListener);
+        okBtn.setBounds(2, 6, 1, 2);
+        okBtn.addActionListener(ACTION_CLICK, new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                if (useDefault.isChecked()) {
+                    PropertiesDialog.this.properties.setProperty("useDefault", "YES");
+                    try {
+                        File file = Application.current().getRelativeFile("thinwire_mail.properties");
+                        if (!file.exists()) file.createNewFile();
+                        PropertiesDialog.this.properties.load(new FileInputStream(file));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    PropertiesDialog.this.properties.setProperty("useDefault", "");
+                    if (useSSL.isChecked()) {
+                        PropertiesDialog.this.properties.setProperty("connectionType", "pop3+ssl");
+                    } else {
+                        PropertiesDialog.this.properties.setProperty("connectionType", "pop3");
+                    }
+                    PropertiesDialog.this.properties.setProperty("username", userName.getText());
+                    PropertiesDialog.this.properties.setProperty("password", password.getText());
+                    PropertiesDialog.this.properties.setProperty("server", server.getText());
+                    PropertiesDialog.this.properties.setProperty("emailAddress", emailAddress.getText());
+                }
+                returnValue = 1;
+                dialog.setVisible(false);
+            }
+        });
         dialog.getChildren().add(okBtn);
         
         cancelBtn = new Button("Cancel", MailClient.IMG_PATH + "cancel.png");
-        cancelBtn.setBounds(355, 140, 60, 30);
-        cancelBtn.addActionListener(ACTION_CLICK, cancelClickListener);
+        cancelBtn.setBounds(3, 6, 1, 2);
+        cancelBtn.addActionListener(ACTION_CLICK, new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                returnValue = 0;
+                PropertiesDialog.this.properties.setProperty("useDefault", "YES");
+                dialog.setVisible(false);
+            }
+        });
         dialog.getChildren().add(cancelBtn);
         
         useDefault.setChecked(properties.getProperty("useDefault", "YES") == "YES");
     }
 
-    public Dialog getDialog() {
+    Dialog getDialog() {
         return dialog;
     }
 
-    public Properties getProperties() {
+    Properties getProperties() {
         return properties;
     }
     
-    public int confirm() {
+    int confirm() {
         returnValue = 0;
         dialog.setVisible(true);
         return returnValue;
     }
-
 }

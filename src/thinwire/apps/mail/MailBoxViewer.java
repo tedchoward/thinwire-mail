@@ -27,20 +27,17 @@ package thinwire.apps.mail;
 import java.util.Date;
 import java.util.HashMap;
 
-import javax.mail.Address;
 import javax.mail.Message;
-import javax.mail.Part;
-import javax.mail.internet.MimeMultipart;
 
 import thinwire.ui.Button;
-import thinwire.ui.Image;
+import thinwire.ui.Label;
 import thinwire.ui.Panel;
 import thinwire.ui.ProgressBar;
 import thinwire.ui.Tree;
 import thinwire.ui.event.ActionEvent;
 import thinwire.ui.event.ActionListener;
-import thinwire.ui.event.PropertyChangeEvent;
-import thinwire.ui.event.PropertyChangeListener;
+import thinwire.ui.layout.TableUnitModel;
+import thinwire.ui.style.Background;
 import thinwire.ui.style.Color;
 import thinwire.ui.style.FX;
 import thinwire.util.ArrayGrid;
@@ -52,51 +49,17 @@ import thinwire.util.ArrayGrid;
  * 
  * @author Ted C. Howard
  */
-public class MailBoxViewer extends Panel {
+class MailBoxViewer extends Panel {
     private MailClient mc;
     private MailTabSheet folderView;
     private Tree mailBoxTree;
     private Tree.Item root;
     private HashMap<String, Tree.Item> folderMap;
-    private Panel tools;
     private Button checkBtn;
     private Button composeBtn;
-    private Image banner;
+    private Label banner;
 
-    private PropertyChangeListener sizeListener = new PropertyChangeListener() {
-        public void propertyChange(PropertyChangeEvent ev) {
-            if (ev.getPropertyName().equals(PROPERTY_WIDTH)) {
-                int size = ((Panel) ev.getSource()).getInnerWidth();
-                banner.setWidth(size);
-                mailBoxTree.setWidth(size);
-                tools.setWidth(size);
-                int x1 = (checkBtn.getWidth() + composeBtn.getWidth() + 10) / 2;
-                int x2 = size / 2;
-                checkBtn.setX(x2 - x1);
-                composeBtn.setX(checkBtn.getX() + checkBtn.getWidth() + 10);
-            } else {
-                int size = ((Panel) ev.getSource()).getInnerHeight() - (banner.getHeight() + tools.getHeight());
-                if (size > 0) {
-                    mailBoxTree.setHeight(size);
-                } else {
-                    mailBoxTree.setHeight(0);
-                }
-            }
-        }
-    };
-
-    private ActionListener clickListener = new ActionListener() {
-        public void actionPerformed(ActionEvent ev) {
-            folderView.setText(((Tree.Item) ev.getSource()).getText());
-            try {
-                folderView.populateMessageList((ArrayGrid) ((Tree.Item) ev.getSource()).getUserObject());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    };
-
-    public ActionListener checkMailListener = new ActionListener() {
+    ActionListener checkMailListener = new ActionListener() {
         public void actionPerformed(ActionEvent ev) {
             try {
                 mc.checkMail();
@@ -106,7 +69,7 @@ public class MailBoxViewer extends Panel {
         }
     };
 
-    public ActionListener composeListener = new ActionListener() {
+    ActionListener composeListener = new ActionListener() {
         public void actionPerformed(ActionEvent ev) {
             ComposeDialog composeDlg = new ComposeDialog();
             composeDlg.getDialog().getStyle().getFX().setVisibleChange(FX.Type.SMOOTH);
@@ -119,31 +82,43 @@ public class MailBoxViewer extends Panel {
         this.mc = mc;
         this.folderView = folderView;
         folderMap = new HashMap<String, Tree.Item>();
-        banner = new Image(MailClient.IMG_PATH + "MailDemoLogo.png");
-        banner.setBounds(0, 0, 30, 46);
+        
+        TableUnitModel tum = new TableUnitModel();
+        tum.setWidths(0, 90, 0, 70, 0);
+        tum.setHeights(46, 4, 22, 4, 0);
+        setUnitModel(tum);
+        
+        banner = new Label();
+        banner.getStyle().getBackground().setImage(MailClient.IMG_PATH + "MailDemoLogo.png");
+        banner.getStyle().getBackground().setPosition(Background.Position.CENTER);
+        banner.setBounds(0, 0, 5, 1);
         getChildren().add(banner);
-        tools = new Panel();
-        tools.setPosition(0, banner.getHeight() + banner.getY());
-        tools.setHeight(30);
-        tools.getStyle().getBackground().setColor(getStyle().getBackground().getColor());
+        
         checkBtn = new Button("Check Mail", MailClient.IMG_PATH + "SychronizeListHS.gif");
-        checkBtn.setY(4);
-        checkBtn.setWidth(90);
-        checkBtn.setHeight(22);
+        checkBtn.setBounds(1, 2, 1, 1);
         checkBtn.addActionListener(Button.ACTION_CLICK, checkMailListener);
-        tools.getChildren().add(checkBtn);
+        getChildren().add(checkBtn);
+        
         composeBtn = new Button("Compose", MailClient.IMG_PATH + "NewMessageHS.gif");
-        composeBtn.setY(4);
-        composeBtn.setWidth(70);
-        composeBtn.setHeight(22);
+        composeBtn.setBounds(3, 2, 1, 1);
         composeBtn.addActionListener(Button.ACTION_CLICK, composeListener);
-        tools.getChildren().add(composeBtn);
-        getChildren().add(tools);
+        getChildren().add(composeBtn);
+        
+        
         mailBoxTree = new Tree();
-        mailBoxTree.setPosition(0, tools.getHeight() + tools.getY());
-        mailBoxTree.addActionListener(Tree.ACTION_CLICK, clickListener);
+        mailBoxTree.setBounds(0, 4, 5, 1);
+        mailBoxTree.addActionListener(Tree.ACTION_CLICK, new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                MailBoxViewer.this.folderView.setText(((Tree.Item) ev.getSource()).getText());
+                try {
+                    MailBoxViewer.this.folderView.populateMessageList((ArrayGrid) ((Tree.Item) ev.getSource()).getUserObject());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         getChildren().add(mailBoxTree);
-        addPropertyChangeListener(new String[] { PROPERTY_WIDTH, PROPERTY_HEIGHT }, sizeListener);
+        
         root = mailBoxTree.getRootItem();
         addFolder("Inbox");
         addFolder("Sent");
@@ -178,9 +153,9 @@ public class MailBoxViewer extends Panel {
      * @param folderName
      * @throws Exception
      */
-    public void populateFolder(Message[] messages, String folderName, ProgressBar pb) throws Exception {
+    void populateFolder(Message[] messages, String folderName, ProgressBar pb) throws Exception {
         if (pb != null) pb.setLength(messages.length > 0 ? messages.length : 1);
-        ArrayGrid folderGrid = (ArrayGrid) folderMap.get(folderName).getUserObject();
+        ArrayGrid<ArrayGrid.Row, ArrayGrid.Column> folderGrid = (ArrayGrid<ArrayGrid.Row, ArrayGrid.Column>) folderMap.get(folderName).getUserObject();
         folderGrid.getRows().clear();
         folderGrid.getRows().add(getWelcomeMessage());
         for (Message m : messages) {
@@ -197,7 +172,7 @@ public class MailBoxViewer extends Panel {
     
     
 
-    public ArrayGrid.Row getWelcomeMessage() {
+    ArrayGrid.Row getWelcomeMessage() {
         ArrayGrid.Row msg = new ArrayGrid.Row();
         msg.add("ThinWire Dev Team <info@thinwire.com>");
         msg.add("Welcome to ThinWire MailClient");
@@ -214,11 +189,11 @@ public class MailBoxViewer extends Panel {
         return msg;
     }
 
-    public void openFolder(String folderName) {
+    void openFolder(String folderName) {
         mailBoxTree.fireAction("click", folderMap.get(folderName));
     }
     
-    public Button getCheckBtn() {
+    Button getCheckBtn() {
         return checkBtn;
     }
 }

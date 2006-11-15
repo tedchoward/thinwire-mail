@@ -64,7 +64,7 @@ import com.sun.mail.pop3.POP3Store;
  * 
  * @author Ted C. Howard
  */
-public class MailClient {
+class MailClient {
 
     static final String IMG_PATH = "class:///thinwire.apps.mail.MailClient/resources/";
     static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
@@ -79,19 +79,6 @@ public class MailClient {
     private MailBoxViewer mbv;
     private Store store;
     private Folder folder;
-
-    private ActionListener menuListener = new ActionListener() {
-        public void actionPerformed(ActionEvent ev) {
-            Menu.Item source = (Menu.Item) ev.getSource();
-            ((ActionListener) source.getUserObject()).actionPerformed(new ActionEvent(ev.getSourceComponent(), ActionEventComponent.ACTION_CLICK));
-        }
-    };
-
-    private ActionListener quitListener = new ActionListener() {
-        public void actionPerformed(ActionEvent ev) {
-            frame.setVisible(false);
-        }
-    };
 
     MailClient() throws Exception {
         store = null;
@@ -128,7 +115,6 @@ public class MailClient {
 
         properties = new Properties();
         PropertiesDialog propDlg = new PropertiesDialog(properties);
-        //propDlg.getDialog().setVisible(true);
         if (propDlg.confirm() == 1) {
             checkMail();
         } else {
@@ -144,7 +130,7 @@ public class MailClient {
      * 
      * @throws Exception
      */
-    public void checkMail() throws Exception {
+    void checkMail() throws Exception {
         mbv.getCheckBtn().setEnabled(true);
         frame.getMenu().getRootItem().getChildren().get(0).getChildren().get(0).setEnabled(true);
         MessageBox pleaseWait = new MessageBox();
@@ -198,11 +184,11 @@ public class MailClient {
         pleaseWait.close();
     }
 
-    public Properties getProperties() {
+    Properties getProperties() {
         return properties;
     }
     
-    public void closeConnection() throws Exception {
+    void closeConnection() throws Exception {
         if (folder != null && folder.isOpen()) folder.close(false);
         if (store != null && store.isConnected()) store.close();
     }
@@ -225,7 +211,11 @@ public class MailClient {
         mnuFile.getChildren().add(mnuFilePrint);
 
         Menu.Item mnuFileQuit = new Menu.Item("Exit");
-        mnuFileQuit.setUserObject(quitListener);
+        mnuFileQuit.setUserObject(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                frame.setVisible(false);
+            }
+        });
         mnuFile.getChildren().add(mnuFileQuit);
 
         Menu.Item mnuTools = new Menu.Item("Tools");
@@ -242,7 +232,12 @@ public class MailClient {
 
         mainMenu.getChildren().add(mnuFile);
         mainMenu.getChildren().add(mnuTools);
-        frame.getMenu().addActionListener(ACTION_CLICK, menuListener);
+        frame.getMenu().addActionListener(ACTION_CLICK, new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                Menu.Item source = (Menu.Item) ev.getSource();
+                ((ActionListener) source.getUserObject()).actionPerformed(new ActionEvent(ev.getSourceComponent(), ActionEventComponent.ACTION_CLICK));
+            }
+        });
     }
 
 }

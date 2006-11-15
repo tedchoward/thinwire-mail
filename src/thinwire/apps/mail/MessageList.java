@@ -58,7 +58,6 @@ public class MessageList extends Panel {
 
     private PropertyChangeListener sizeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
-            //int size = ((Integer) ev.getNewValue()) - (MailClient.BORDER_SIZE);
             if (ev.getPropertyName().equals(PROPERTY_WIDTH)) {
                 int size = ((Panel) ev.getSource()).getInnerWidth();
                 messageGrid.setWidth(size);
@@ -75,11 +74,8 @@ public class MessageList extends Panel {
         public void propertyChange(PropertyChangeEvent ev) {
             GridBox.Row curRow = (GridBox.Row) ev.getSource();
             try {
-                /*if (curRow.get("content") instanceof Message) {
-                    curRow.set(3, getMessage((Message) curRow.get("content")));
-                }*/
                 getMessage(messageGrid.getRows().indexOf(curRow));
-                mv.setMessage(((GridBox.Row) ev.getSource()).get("content").toString());                
+                mv.setContent(((GridBox.Row) ev.getSource()).get("content").toString());                
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
