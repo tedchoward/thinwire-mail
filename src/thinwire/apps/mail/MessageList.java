@@ -36,6 +36,7 @@ import javax.mail.internet.MimeMultipart;
 
 import thinwire.ui.GridBox;
 import thinwire.ui.Panel;
+import thinwire.ui.WebBrowser;
 import thinwire.ui.GridBox.Column.SortOrder;
 import thinwire.ui.event.PropertyChangeEvent;
 import thinwire.ui.event.PropertyChangeListener;
@@ -49,10 +50,10 @@ import thinwire.util.Grid;
  * 
  * @author Ted C. Howard
  */
-public class MessageList extends Panel {
+class MessageList extends Panel {
     private GridBox messageGrid;
     private GridBox altGrid;
-    private MessageViewer mv;
+    private WebBrowser mv;
     private MailClient mc;
     private int msgIndex;
 
@@ -95,7 +96,7 @@ public class MessageList extends Panel {
 
     };
 
-    MessageList(MessageViewer mv, MailClient mc) {
+    MessageList(WebBrowser mv, MailClient mc) {
         msgIndex = -1;
         this.mv = mv;
         this.mc = mc;
@@ -111,10 +112,10 @@ public class MessageList extends Panel {
         addPropertyChangeListener(new String[] { PROPERTY_WIDTH, PROPERTY_HEIGHT }, sizeListener);
     }
 
-    public void populate(Grid folderGrid) throws Exception {
+    void populate(Grid folderGrid) throws Exception {
         msgIndex = -1;
         messageGrid.getRows().clear();
-        mv.clear();
+        mv.setLocation("about:blank");
         for (Object curRow : folderGrid.getRows()) {
             messageGrid.getRows().add(new GridBox.Row((Grid.Row) curRow));
         }
@@ -123,7 +124,7 @@ public class MessageList extends Panel {
         mr.start();
     }
 
-    public void deleteMessage() {
+    void deleteMessage() {
         if (messageGrid.getSelectedRow() != null) messageGrid.getRows().remove(messageGrid.getSelectedRow());
     }
 
@@ -160,14 +161,14 @@ public class MessageList extends Panel {
     /**
      * @return the main GridBox that contains the complete set of messages
      */
-    public GridBox getMessageGrid() {
+    GridBox getMessageGrid() {
         return messageGrid;
     }
 
     /**
      * @return the alternate GridBox used for displaying search results
      */
-    public GridBox getAltGrid() {
+    GridBox getAltGrid() {
         return altGrid;
     }
     
@@ -180,7 +181,7 @@ public class MessageList extends Panel {
         }
     }
     
-    public synchronized boolean getNextMessage() throws Exception {
+    synchronized boolean getNextMessage() throws Exception {
         if (++msgIndex < messageGrid.getRows().size()) {
             Object tmp = messageGrid.getRows().get(msgIndex).get("content");
             if (tmp instanceof Message) {
@@ -194,7 +195,7 @@ public class MessageList extends Panel {
         }
     }
     
-    private synchronized String getMessage(Message m) throws Exception {
+    synchronized String getMessage(Message m) throws Exception {
         StringBuilder sb = new StringBuilder();
         Address[] recipients = m.getRecipients(Message.RecipientType.TO);
         for (Address a : recipients) {

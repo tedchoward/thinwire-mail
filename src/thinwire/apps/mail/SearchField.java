@@ -42,7 +42,7 @@ import thinwire.ui.event.ActionListener;
  * 
  * @author Ted C. Howard
  */
-public class SearchField extends Panel {
+class SearchField extends Panel {
     private TextField searchField;
     private Button searchBtn;
     private GridBox searchSrc;

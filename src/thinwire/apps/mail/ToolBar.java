@@ -40,7 +40,7 @@ import thinwire.ui.event.PropertyChangeListener;
  * 
  * @author Ted C. Howard
  */
-public class ToolBar extends Panel {
+class ToolBar extends Panel {
     private HashMap<String, Button> buttonMap;
     private int nextX;
     private Component rightComponent;
@@ -62,7 +62,7 @@ public class ToolBar extends Panel {
         addPropertyChangeListener(new String[] { PROPERTY_WIDTH, PROPERTY_HEIGHT }, sizeListener);
     }
 
-    public void addButton(String text) {
+    void addButton(String text) {
         addButton(text, null);
     }
 
@@ -73,7 +73,7 @@ public class ToolBar extends Panel {
      * @param text
      * @param image
      */
-    public void addButton(String text, String image) {
+    void addButton(String text, String image) {
         Button newButton = new Button();
         newButton.setText(text);
         if (image != null) newButton.setImage(image);
@@ -87,7 +87,7 @@ public class ToolBar extends Panel {
      * @param text
      * @return the Button specified by the text
      */
-    public Button getButton(String text) {
+    Button getButton(String text) {
         return buttonMap.get(text);
     }
 
@@ -96,7 +96,7 @@ public class ToolBar extends Panel {
      * 
      * @param rightComponent
      */
-    public void setRightComponent(Component rightComponent) {
+    void setRightComponent(Component rightComponent) {
         if (getChildren().contains(this.rightComponent)) getChildren().remove(this.rightComponent);
         this.rightComponent = rightComponent;
         getChildren().add(this.rightComponent);

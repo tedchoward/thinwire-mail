@@ -24,7 +24,7 @@
  */
 package thinwire.apps.mail;
 
-public class MessageRetriever extends Thread {
+class MessageRetriever extends Thread {
     
     private MailClient mc;
     private MessageList ml;

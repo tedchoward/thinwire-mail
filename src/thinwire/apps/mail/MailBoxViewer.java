@@ -36,7 +36,7 @@ import thinwire.ui.ProgressBar;
 import thinwire.ui.Tree;
 import thinwire.ui.event.ActionEvent;
 import thinwire.ui.event.ActionListener;
-import thinwire.ui.layout.TableUnitModel;
+import thinwire.ui.layout.TableLayout;
 import thinwire.ui.style.Background;
 import thinwire.ui.style.Color;
 import thinwire.ui.style.FX;
@@ -82,31 +82,28 @@ class MailBoxViewer extends Panel {
         this.mc = mc;
         this.folderView = folderView;
         folderMap = new HashMap<String, Tree.Item>();
-        
-        TableUnitModel tum = new TableUnitModel();
-        tum.setWidths(0, 90, 0, 70, 0);
-        tum.setHeights(46, 4, 22, 4, 0);
-        setUnitModel(tum);
+
+        setLayout(new TableLayout(new double[][] {{0, 90, 0, 70, 0}, {46, 4, 22, 4, 0}}));
         
         banner = new Label();
         banner.getStyle().getBackground().setImage(MailClient.IMG_PATH + "MailDemoLogo.png");
         banner.getStyle().getBackground().setPosition(Background.Position.CENTER);
-        banner.setBounds(0, 0, 5, 1);
+        banner.setLimit("0, 0, 5, 1");
         getChildren().add(banner);
         
         checkBtn = new Button("Check Mail", MailClient.IMG_PATH + "SychronizeListHS.gif");
-        checkBtn.setBounds(1, 2, 1, 1);
+        checkBtn.setLimit("1, 2, 1, 1");
         checkBtn.addActionListener(Button.ACTION_CLICK, checkMailListener);
         getChildren().add(checkBtn);
         
         composeBtn = new Button("Compose", MailClient.IMG_PATH + "NewMessageHS.gif");
-        composeBtn.setBounds(3, 2, 1, 1);
+        composeBtn.setLimit("3, 2, 1, 1");
         composeBtn.addActionListener(Button.ACTION_CLICK, composeListener);
         getChildren().add(composeBtn);
         
         
         mailBoxTree = new Tree();
-        mailBoxTree.setBounds(0, 4, 5, 1);
+        mailBoxTree.setLimit("0, 4, 5, 1");
         mailBoxTree.addActionListener(Tree.ACTION_CLICK, new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 MailBoxViewer.this.folderView.setText(((Tree.Item) ev.getSource()).getText());

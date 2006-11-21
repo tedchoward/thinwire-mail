@@ -33,7 +33,7 @@ import thinwire.ui.TextArea;
 import thinwire.ui.TextField;
 import thinwire.ui.event.ActionEvent;
 import thinwire.ui.event.ActionListener;
-import thinwire.ui.layout.TableUnitModel;
+import thinwire.ui.layout.TableLayout;
 
 /**
  * The ComposeDialog contains a Dialog set up for composing a new email. It has
@@ -43,7 +43,7 @@ import thinwire.ui.layout.TableUnitModel;
  * 
  * @author Ted C. Howard
  */
-public class ComposeDialog extends Object {
+class ComposeDialog extends Object {
     private Dialog dialog;
     private ToolBar toolBar;
     private TextField toField;
@@ -56,16 +56,10 @@ public class ComposeDialog extends Object {
         dialog.setResizeAllowed(true);
         dialog.setBounds(50, 50, 640, 480);
         dialog.setTitle("New Message");
-        
-        TableUnitModel tum = new TableUnitModel();
-        tum.setWidths(56, 0);
-        tum.setHeights(30, 20, 20, 20, 0);
-        tum.setRowSpace(2);
-        tum.setColumnSpace(2);
-        dialog.setUnitModel(tum);
+        dialog.setLayout(new TableLayout(new double[][] {{56, 0}, {30, 20, 20, 20, 0}}, 0, 2));
         
         toolBar = new ToolBar();
-        toolBar.setBounds(0, 0, 2, 1);
+        toolBar.setLimit("0, 0, 2, 1");
         toolBar.addButton("Send", MailClient.IMG_PATH + "EnvelopeHS.gif");
         toolBar.getButton("Send").addActionListener(ACTION_CLICK, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -80,42 +74,42 @@ public class ComposeDialog extends Object {
         });
         dialog.getChildren().add(toolBar);
         toField = new TextField();
-        toField.setBounds(1, 1, 1, 1);
+        toField.setLimit("1, 1, 1, 1");
         dialog.getChildren().add(toField);
 
         Label toFieldLbl = new Label();
         toFieldLbl.setText("To:");
         toFieldLbl.setAlignX(AlignX.RIGHT);
-        toFieldLbl.setBounds(0, 1, 1, 1);
+        toFieldLbl.setLimit("0, 1, 1, 1");
         toFieldLbl.setLabelFor(toField);
         dialog.getChildren().add(toFieldLbl);
 
         ccField = new TextField();
-        ccField.setBounds(1, 2, 1, 1);
+        ccField.setLimit("1, 2, 1, 1");
         dialog.getChildren().add(ccField);
         Label ccFieldLbl = new Label();
         ccFieldLbl.setText("Cc:");
         ccFieldLbl.setAlignX(AlignX.RIGHT);
-        ccFieldLbl.setBounds(0, 2, 1, 1);
+        ccFieldLbl.setLimit("0, 2, 1, 1");
         ccFieldLbl.setLabelFor(ccField);
         dialog.getChildren().add(ccFieldLbl);
 
         subjectField = new TextField("Hey! You can resize this Dialog!");
-        subjectField.setBounds(1, 3, 1, 1);
+        subjectField.setLimit("1, 3, 1, 1");
         dialog.getChildren().add(subjectField);
         Label subjectFieldLbl = new Label();
         subjectFieldLbl.setText("Subject:");
         subjectFieldLbl.setAlignX(AlignX.RIGHT);
-        subjectFieldLbl.setBounds(0, 3, 1, 1);
+        subjectFieldLbl.setLimit("0, 3, 1, 1");
         subjectFieldLbl.setLabelFor(subjectField);
         dialog.getChildren().add(subjectFieldLbl);
 
         msgBodyArea = new TextArea();
-        msgBodyArea.setBounds(0, 4, 2, 1);
+        msgBodyArea.setLimit("0, 4, 2, 1");
         dialog.getChildren().add(msgBodyArea);
     }
 
-    public Dialog getDialog() {
+    Dialog getDialog() {
         return dialog;
     }
 }

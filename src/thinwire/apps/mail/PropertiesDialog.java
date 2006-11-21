@@ -41,7 +41,7 @@ import thinwire.ui.event.ActionEvent;
 import thinwire.ui.event.ActionListener;
 import thinwire.ui.event.PropertyChangeEvent;
 import thinwire.ui.event.PropertyChangeListener;
-import thinwire.ui.layout.TableUnitModel;
+import thinwire.ui.layout.TableLayout;
 
 /**
  * The PropertiesDialog contains a Dialog for getting the POP3 account settings
@@ -71,16 +71,13 @@ class PropertiesDialog {
         dialog = new Dialog();
         dialog.setBounds(10, 10, 425, 200);
         dialog.setTitle("Account Settings");
-        
-        TableUnitModel tum = new TableUnitModel();
-        tum.setWidths(115, 0, 60, 60, 5);
-        tum.setHeights(5, 20, 20, 20, 20, 20, 20, 5, 5);
-        tum.setRowSpace(5);
-        tum.setColumnSpace(5);
-        dialog.setUnitModel(tum);
+        dialog.setLayout(new TableLayout(
+            new double[][] {{115, 0, 60, 60, 5}, 
+                            {5, 20, 20, 20, 20, 20, 20, 5, 5}}, 
+            0, 5));
         
         useDefault = new CheckBox("Use Demo Account");
-        useDefault.setBounds(1, 1, 1, 1);
+        useDefault.setLimit("1, 1, 1, 1");
         useDefault.addPropertyChangeListener(CheckBox.PROPERTY_CHECKED, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
                 if ((Boolean) ev.getNewValue()) {
@@ -101,62 +98,62 @@ class PropertiesDialog {
         dialog.getChildren().add(useDefault);
 
         userName = new TextField();
-        userName.setBounds(1, 2, 3, 1);
+        userName.setLimit("1, 2, 3, 1");
         userName.setText(properties.getProperty("username", ""));
         dialog.getChildren().add(userName);
         
         Label userNameLbl = new Label();
         userNameLbl.setText("User Name:");
-        userNameLbl.setBounds(0, 2, 1, 1);
+        userNameLbl.setLimit("0, 2, 1, 1");
         userNameLbl.setAlignX(AlignX.RIGHT);
         userNameLbl.setLabelFor(userName);
         dialog.getChildren().add(userNameLbl);
 
         password = new TextField();
-        password.setBounds(1, 3, 3, 1);
+        password.setLimit("1, 3, 3, 1");
         password.setInputHidden(true);
         password.setText(properties.getProperty("password", ""));
         dialog.getChildren().add(password);
         
         Label passwordLbl = new Label();
         passwordLbl.setText("Password:");
-        passwordLbl.setBounds(0, 3, 1, 1);
+        passwordLbl.setLimit("0, 3, 1, 1");
         passwordLbl.setAlignX(AlignX.RIGHT);
         passwordLbl.setLabelFor(password);
         dialog.getChildren().add(passwordLbl);
 
         server = new TextField();
-        server.setBounds(1, 4, 3, 1);
+        server.setLimit("1, 4, 3, 1");
         server.setText(properties.getProperty("server", ""));
         dialog.getChildren().add(server);
         
         Label serverLbl = new Label();
         serverLbl.setText("Server:");
-        serverLbl.setBounds(0, 4, 1, 1);
+        serverLbl.setLimit("0, 4, 1, 1");
         serverLbl.setAlignX(AlignX.RIGHT);
         serverLbl.setLabelFor(server);
         dialog.getChildren().add(serverLbl);
 
         emailAddress = new TextField();
-        emailAddress.setBounds(1, 5, 3, 1);
+        emailAddress.setLimit("1, 5, 3, 1");
         emailAddress.setText(properties.getProperty("emailAddress", ""));
         dialog.getChildren().add(emailAddress);
         Label emailLbl = new Label();
         emailLbl.setText("Email Address:");
         
-        emailLbl.setBounds(0, 5, 1, 1);
+        emailLbl.setLimit("0, 5, 1, 1");
         emailLbl.setAlignX(AlignX.RIGHT);
         emailLbl.setLabelFor(emailAddress);
         dialog.getChildren().add(emailLbl);
 
         useSSL = new CheckBox();
         useSSL.setText("SSL Connection");
-        useSSL.setBounds(1, 6, 1, 1);
+        useSSL.setLimit("1, 6, 1, 1");
         if (properties.getProperty("connectionType", "").equals("pop3+ssl")) useSSL.setChecked(true);
         dialog.getChildren().add(useSSL);
 
         okBtn = new Button("OK", MailClient.IMG_PATH + "ok.png");
-        okBtn.setBounds(2, 6, 1, 2);
+        okBtn.setLimit("2, 6, 1, 2");
         okBtn.addActionListener(ACTION_CLICK, new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 if (useDefault.isChecked()) {
@@ -187,7 +184,7 @@ class PropertiesDialog {
         dialog.getChildren().add(okBtn);
         
         cancelBtn = new Button("Cancel", MailClient.IMG_PATH + "cancel.png");
-        cancelBtn.setBounds(3, 6, 1, 2);
+        cancelBtn.setLimit("3, 6, 1, 2");
         cancelBtn.addActionListener(ACTION_CLICK, new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 returnValue = 0;

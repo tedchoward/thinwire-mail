@@ -24,20 +24,17 @@
  */
 package thinwire.apps.mail;
 
-import static thinwire.ui.ActionEventComponent.ACTION_CLICK;
-
 import java.util.Properties;
 
 import thinwire.ui.Hyperlink;
 import thinwire.ui.MessageBox;
 import thinwire.ui.Panel;
 import thinwire.ui.TabSheet;
+import thinwire.ui.WebBrowser;
 import thinwire.ui.event.ActionEvent;
 import thinwire.ui.event.ActionListener;
-import thinwire.ui.event.PropertyChangeEvent;
-import thinwire.ui.event.PropertyChangeListener;
 import thinwire.ui.layout.SplitLayout;
-import thinwire.ui.layout.SplitLayout.SplitType;
+import thinwire.ui.layout.TableLayout;
 import thinwire.ui.style.Color;
 import thinwire.util.Grid;
 
@@ -48,40 +45,18 @@ import thinwire.util.Grid;
  * 
  * @author Ted C. Howard
  */
-public class MailTabSheet extends TabSheet {
+class MailTabSheet extends TabSheet {
     private ToolBar toolBar;
     private Panel contentPanel;
-    private MessageViewer mv;
+    private WebBrowser mv;
     private MessageList ml;
     private MailClient mc;
 
     /*
-     * When the MailTabSheet is resized as a result of the browser being
-     * resized, the internal components are resized accordingly.
-     */
-    private PropertyChangeListener sizeListener = new PropertyChangeListener() {
-        public void propertyChange(PropertyChangeEvent ev) {
-            //int size = ((Integer) ev.getNewValue()) - (MailClient.BORDER_SIZE);
-            if (ev.getPropertyName().equals(PROPERTY_WIDTH)) {
-                int size = ((TabSheet) ev.getSource()).getInnerWidth();
-                contentPanel.setWidth(size);
-                toolBar.setWidth(size);
-            } else {
-                int size = ((TabSheet) ev.getSource()).getInnerHeight() - toolBar.getHeight();
-                if (size > 0) {
-                    contentPanel.setHeight(size);
-                } else {
-                    contentPanel.setHeight(0);
-                }
-            }
-        }
-    };
-
-    /*
-     * The following ActionListeners are public so they can be referenced by the
+     * The following ActionListeners aren't private so they can be referenced by the
      * Menu created in MailClient.java
      */
-    public ActionListener printAction = new ActionListener() {
+    ActionListener printAction = new ActionListener() {
         public void actionPerformed(ActionEvent ev) {
             Hyperlink h = new Hyperlink();
             h.setText("Click Here to Open the Message in a New Window");
@@ -92,7 +67,7 @@ public class MailTabSheet extends TabSheet {
         }
     };
 
-    public ActionListener acctSettingsAction = new ActionListener() {
+    ActionListener acctSettingsAction = new ActionListener() {
         public void actionPerformed(ActionEvent ev) {
             Properties properties = mc.getProperties();
             if (properties.getProperty("useDefault").equals("YES")) properties.clear();
@@ -110,16 +85,16 @@ public class MailTabSheet extends TabSheet {
     MailTabSheet(MailClient mc) {
         getStyle().getBackground().setColor(Color.SILVER);
         getStyle().getBorder().setColor(getStyle().getBackground().getColor());
-        mv = new MessageViewer();
+        mv = new WebBrowser();
+        mv.getStyle().getBackground().setColor(Color.WHITE);
         mv.getStyle().getBackground().setColor(getStyle().getBackground().getColor());
         ml = new MessageList(mv, mc);
         ml.getStyle().getBackground().setColor(getStyle().getBackground().getColor());
+        setLayout(new TableLayout(new double[][] {{0}, {30, 0}}));
         this.mc = mc;
         toolBar = new ToolBar();
         toolBar.getStyle().getBackground().setColor(getStyle().getBackground().getColor());
-        toolBar.setX(0);
-        toolBar.setY(0);
-        toolBar.setHeight(30);
+        toolBar.setLimit("0, 0");
         toolBar.addButton("Print", MailClient.IMG_PATH + "PrintHS.gif");
         toolBar.getButton("Print").addActionListener(ACTION_CLICK, printAction);
         toolBar.addButton("Delete", MailClient.IMG_PATH + "DeleteHS.gif");
@@ -134,20 +109,16 @@ public class MailTabSheet extends TabSheet {
         getChildren().add(toolBar);
         
         contentPanel = new Panel();
-        contentPanel.setX(0);
-        contentPanel.setY(30);
-        if (getWidth() > 0) this.contentPanel.setWidth(getWidth());
-        if (getHeight() > 30) this.contentPanel.setHeight(getHeight() - 30);
+        contentPanel.setLimit("0, 1");
 
         contentPanel.getChildren().add(ml);
         contentPanel.getChildren().add(mv);
-        new SplitLayout(contentPanel, SplitType.HORIZONTAL, .50);
+        contentPanel.setLayout(new SplitLayout(.50));
         contentPanel.getStyle().getBackground().setColor(getStyle().getBackground().getColor());
         getChildren().add(contentPanel);
-        addPropertyChangeListener(new String[] { PROPERTY_WIDTH, PROPERTY_HEIGHT }, sizeListener);
     }
 
-    public void populateMessageList(Grid folderGrid) throws Exception {
+    void populateMessageList(Grid folderGrid) throws Exception {
         ml.populate(folderGrid);
     }
 }

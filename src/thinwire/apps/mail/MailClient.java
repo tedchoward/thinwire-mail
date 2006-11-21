@@ -48,7 +48,6 @@ import thinwire.ui.event.ActionListener;
 import thinwire.ui.event.PropertyChangeEvent;
 import thinwire.ui.event.PropertyChangeListener;
 import thinwire.ui.layout.SplitLayout;
-import thinwire.ui.layout.SplitLayout.SplitType;
 import thinwire.ui.style.Color;
 
 import com.sun.mail.pop3.POP3Store;
@@ -97,7 +96,7 @@ class MailClient {
         right.getStyle().getBorder().setColor(right.getStyle().getBackground().getColor());
         right.getChildren().add(folderView);
         frame.getChildren().add(right);
-        new SplitLayout(frame, SplitType.VERTICAL, .25);
+        frame.setLayout(new SplitLayout(.25, true));
 
         buildMenu();
         
