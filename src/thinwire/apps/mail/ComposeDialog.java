@@ -25,7 +25,6 @@
 package thinwire.apps.mail;
 
 import static thinwire.ui.Component.ACTION_CLICK;
-import thinwire.ui.AlignX;
 import thinwire.ui.Dialog;
 import thinwire.ui.Label;
 import thinwire.ui.MessageBox;
@@ -79,7 +78,7 @@ class ComposeDialog extends Object {
 
         Label toFieldLbl = new Label();
         toFieldLbl.setText("To:");
-        toFieldLbl.setAlignX(AlignX.RIGHT);
+        toFieldLbl.setAlignX(Label.AlignX.RIGHT);
         toFieldLbl.setLimit("0, 1, 1, 1");
         toFieldLbl.setLabelFor(toField);
         dialog.getChildren().add(toFieldLbl);
@@ -89,7 +88,7 @@ class ComposeDialog extends Object {
         dialog.getChildren().add(ccField);
         Label ccFieldLbl = new Label();
         ccFieldLbl.setText("Cc:");
-        ccFieldLbl.setAlignX(AlignX.RIGHT);
+        ccFieldLbl.setAlignX(Label.AlignX.RIGHT);
         ccFieldLbl.setLimit("0, 2, 1, 1");
         ccFieldLbl.setLabelFor(ccField);
         dialog.getChildren().add(ccFieldLbl);
@@ -99,7 +98,7 @@ class ComposeDialog extends Object {
         dialog.getChildren().add(subjectField);
         Label subjectFieldLbl = new Label();
         subjectFieldLbl.setText("Subject:");
-        subjectFieldLbl.setAlignX(AlignX.RIGHT);
+        subjectFieldLbl.setAlignX(Label.AlignX.RIGHT);
         subjectFieldLbl.setLimit("0, 3, 1, 1");
         subjectFieldLbl.setLabelFor(subjectField);
         dialog.getChildren().add(subjectFieldLbl);

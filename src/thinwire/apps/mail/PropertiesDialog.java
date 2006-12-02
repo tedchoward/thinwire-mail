@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-import thinwire.ui.AlignX;
 import thinwire.ui.Application;
 import thinwire.ui.Button;
 import thinwire.ui.CheckBox;
@@ -105,7 +104,7 @@ class PropertiesDialog {
         Label userNameLbl = new Label();
         userNameLbl.setText("User Name:");
         userNameLbl.setLimit("0, 2, 1, 1");
-        userNameLbl.setAlignX(AlignX.RIGHT);
+        userNameLbl.setAlignX(Label.AlignX.RIGHT);
         userNameLbl.setLabelFor(userName);
         dialog.getChildren().add(userNameLbl);
 
@@ -118,7 +117,7 @@ class PropertiesDialog {
         Label passwordLbl = new Label();
         passwordLbl.setText("Password:");
         passwordLbl.setLimit("0, 3, 1, 1");
-        passwordLbl.setAlignX(AlignX.RIGHT);
+        passwordLbl.setAlignX(Label.AlignX.RIGHT);
         passwordLbl.setLabelFor(password);
         dialog.getChildren().add(passwordLbl);
 
@@ -130,7 +129,7 @@ class PropertiesDialog {
         Label serverLbl = new Label();
         serverLbl.setText("Server:");
         serverLbl.setLimit("0, 4, 1, 1");
-        serverLbl.setAlignX(AlignX.RIGHT);
+        serverLbl.setAlignX(Label.AlignX.RIGHT);
         serverLbl.setLabelFor(server);
         dialog.getChildren().add(serverLbl);
 
@@ -142,7 +141,7 @@ class PropertiesDialog {
         emailLbl.setText("Email Address:");
         
         emailLbl.setLimit("0, 5, 1, 1");
-        emailLbl.setAlignX(AlignX.RIGHT);
+        emailLbl.setAlignX(Label.AlignX.RIGHT);
         emailLbl.setLabelFor(emailAddress);
         dialog.getChildren().add(emailLbl);
 
