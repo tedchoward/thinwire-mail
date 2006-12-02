@@ -24,7 +24,7 @@
  */
 package thinwire.apps.mail;
 
-import static thinwire.ui.ActionEventComponent.ACTION_CLICK;
+import static thinwire.ui.Component.ACTION_CLICK;
 
 import java.util.Properties;
 
@@ -36,7 +36,6 @@ import javax.mail.Store;
 import javax.mail.URLName;
 
 import thinwire.render.web.WebApplication;
-import thinwire.ui.ActionEventComponent;
 import thinwire.ui.Application;
 import thinwire.ui.Frame;
 import thinwire.ui.Menu;
@@ -234,7 +233,7 @@ class MailClient {
         frame.getMenu().addActionListener(ACTION_CLICK, new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 Menu.Item source = (Menu.Item) ev.getSource();
-                ((ActionListener) source.getUserObject()).actionPerformed(new ActionEvent(ev.getSourceComponent(), ActionEventComponent.ACTION_CLICK));
+                ((ActionListener) source.getUserObject()).actionPerformed(new ActionEvent(ev.getSourceComponent(), ACTION_CLICK));
             }
         });
     }

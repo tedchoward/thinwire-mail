@@ -24,7 +24,7 @@
  */
 package thinwire.apps.mail;
 
-import static thinwire.ui.ActionEventComponent.ACTION_CLICK;
+import static thinwire.ui.Component.ACTION_CLICK;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -24,7 +24,6 @@
  */
 package thinwire.apps.mail;
 
-import static thinwire.ui.ActionEventComponent.ACTION_CLICK;
 
 import java.util.List;
 
