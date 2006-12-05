@@ -233,7 +233,7 @@ class MailClient {
         frame.getMenu().addActionListener(ACTION_CLICK, new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 Menu.Item source = (Menu.Item) ev.getSource();
-                ((ActionListener) source.getUserObject()).actionPerformed(new ActionEvent(ev.getSourceComponent(), ACTION_CLICK));
+                ((ActionListener) source.getUserObject()).actionPerformed(new ActionEvent(ACTION_CLICK, ev.getSourceComponent()));
             }
         });
     }

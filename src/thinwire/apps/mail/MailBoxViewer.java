@@ -188,7 +188,7 @@ class MailBoxViewer extends Panel {
     }
 
     void openFolder(String folderName) {
-        mailBoxTree.fireAction(new ActionEvent(mailBoxTree, folderMap.get(folderName), ACTION_CLICK));
+        mailBoxTree.fireAction(new ActionEvent(ACTION_CLICK, mailBoxTree, folderMap.get(folderName)));
     }
     
     Button getCheckBtn() {
