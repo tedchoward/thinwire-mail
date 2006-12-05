@@ -39,6 +39,7 @@ import thinwire.ui.event.ActionListener;
 import thinwire.ui.layout.TableLayout;
 import thinwire.ui.style.Background;
 import thinwire.ui.style.Color;
+import thinwire.ui.style.Effect;
 import thinwire.ui.style.FX;
 import thinwire.util.ArrayGrid;
 
@@ -72,7 +73,7 @@ class MailBoxViewer extends Panel {
     ActionListener composeListener = new ActionListener() {
         public void actionPerformed(ActionEvent ev) {
             ComposeDialog composeDlg = new ComposeDialog();
-            composeDlg.getDialog().getStyle().getFX().setVisibleChange(FX.Type.SMOOTH);
+            composeDlg.getDialog().getStyle().getFX().setVisibleChange(Effect.Motion.SMOOTH);
             composeDlg.getDialog().setVisible(true);
         }
     };
