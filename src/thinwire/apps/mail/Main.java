@@ -35,7 +35,7 @@ package thinwire.apps.mail;
  * 
  * @author Ted C. Howard
  */
-public class Main {
+public class Main extends thinwire.render.web.WebServlet {
     public static void main(String[] args) throws Exception {
         new MailClient();
     }
