@@ -152,7 +152,7 @@ class MailBoxViewer extends Panel {
      */
     void populateFolder(Message[] messages, String folderName, ProgressBar pb) throws Exception {
         if (pb != null) pb.setLength(messages.length > 0 ? messages.length : 1);
-        ArrayGrid<ArrayGrid.Row, ArrayGrid.Column> folderGrid = (ArrayGrid<ArrayGrid.Row, ArrayGrid.Column>) folderMap.get(folderName).getUserObject();
+        ArrayGrid folderGrid = (ArrayGrid) folderMap.get(folderName).getUserObject();
         folderGrid.getRows().clear();
         folderGrid.getRows().add(getWelcomeMessage());
         for (Message m : messages) {
